@@ -1,0 +1,14 @@
+{
+    "name": "timrodger/bots",
+    "description": "bots",
+    "authors": [
+        {
+            "name": "Tim Rodger",
+            "email": "tim.rodger@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "~2.5",
+        "guzzlehttp/guzzle": "~5.2"
+    }
+}
