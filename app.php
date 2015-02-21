@@ -18,6 +18,16 @@ foreach ($topics as $topic) {
     $client->subscribe($topic);
 }
 
+function updateScore($client, $topic, $score, $time) {
+    $client->send('PlayerScore',
+        ['status' => 'playing', 
+        'score' => $score['score'],
+        'id' => $score['id'],
+        'time' => $time
+        ]
+    );
+}
+
 // set up polling loop
 while (true) {
     foreach ($topics as $topic) {
@@ -34,14 +44,7 @@ while (true) {
             case 'playerJoin':
                 // add player to score board
                 $score = $score_board->addPlayer($response['id']);
-
-                $client->send('PlayerScore',
-                    ['status' => 'playing', 
-                    'score' => $score['score'],
-                    'id' => $score['id'],
-                    'time' => $current_time
-                    ]
-                );
+                updateScore($client, 'PlayerScore', $score, $current_time);
                 break;
             
             case 'ArenaClock':
@@ -57,13 +60,7 @@ while (true) {
                 if ($response['type'] == 'collision') {
                     // set score
                     $score = $score_board->updatePlayer($response['id'], -10);
-                    $client->send('PlayerScore',
-                        ['status' => 'playing', 
-                        'score' => $score['score'],
-                        'id' => $score['id'],
-                        'time' => $current_time
-                        ]
-                    );
+                    updateScore($client, 'PlayerScore', $score, $current_time);
                 }
                 break;
             default:
