@@ -6,7 +6,7 @@ class ComboClient
 {
     private $host = 'http://52.16.7.112:8000';
     
-    private $score_topic = 'score';
+    private $score_topic = 'PlayerScore';
     
     private $subscribers;
 

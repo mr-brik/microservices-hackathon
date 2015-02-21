@@ -4,9 +4,10 @@ require __DIR__.'/ComboClient.php';
 
 // set up scores data
 $scores = [];
+$current_time = 0;
 
 // subscribe to topics
-$topics = ['ArenaClock', 'playerJoin'];
+$topics = ['ArenaClock', 'playerJoin', 'scoreEvent'];
 
 $client = new ComboClient;
 
@@ -29,10 +30,24 @@ while (true) {
             case 'playerJoin':
                 // give them a score of 0 and send fact
                 $scores[$response['id']] = 0;
-                $client->send(['status' => 'playing', 'score' => 0, 'id' => $response['id']]);
+                $client->send(
+                    ['status' => 'playing', 
+                    'score' => 0, 
+                    'id' => $response['id'],
+                    'time' => $current_time
+                    ]
+                );
+                // send score board too
                 break;
             
             case 'ArenaClock':
+                $current_time = $response['tick'];
+                break;
+
+            case 'scoreEvent':
+                // increase player score
+                if ($response['type'] == 'collision') {
+                }
                 break;
             default:
                 //nothing
