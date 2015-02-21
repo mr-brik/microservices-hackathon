@@ -20,7 +20,7 @@ function updateScore($client, $topic, $score) {
     $client->send('PlayerScore',
         ['status' => 'playing', 
         'score' => $score['score'],
-        'id' => $score['id'],
+        'id' => $score['id']
         ]
     );
 }
