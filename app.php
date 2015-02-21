@@ -20,7 +20,7 @@ function updateScore($client, $topic, $score) {
     $client->send('PlayerScore',
         ['status' => 'playing', 
         'score' => $score['score'],
-        'id' => $score['id'],
+        'id' => $score['id']
         ]
     );
 }
@@ -56,6 +56,9 @@ while (true) {
                 if ($response['type'] == 'collision') {
                     // set score
                     $score = $score_board->updatePlayer($response['id'], -10);
+                    updateScore($client, 'PlayerScore', $score);
+                } else if ($response['type'] == 'hit') {
+                    $score = $score_board->updatePlayer($response['id'], 30);
                     updateScore($client, 'PlayerScore', $score);
                 }
                 break;
