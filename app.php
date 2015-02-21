@@ -21,7 +21,8 @@ foreach ($topics as $topic) {
 // set up polling loop
 while (true) {
     foreach ($topics as $topic) {
-        echo $topic . "\n";
+        echo "Polling for $topic\n";
+
         // poll topic
         $response = $client->poll($topic);
         if (!$response) {
@@ -46,6 +47,7 @@ while (true) {
             case 'ArenaClock':
                 $current_time = $response['tick'];
                 // send out leader board each tick
+                var_dump($score_board->getScores());
                 $fact = ['scores' => $score_board->getScores(), 'time' => $current_time];
                 $client->send('LeaderBoard', $fact);
                 break;
@@ -54,6 +56,14 @@ while (true) {
                 // increase player score
                 if ($response['type'] == 'collision') {
                     // set score
+                    $score = $score_board->updatePlayer($response['id'], -10);
+                    $client->send('PlayerScore',
+                        ['status' => 'playing', 
+                        'score' => $score['score'],
+                        'id' => $score['id'],
+                        'time' => $current_time
+                        ]
+                    );
                 }
                 break;
             default:

@@ -23,7 +23,7 @@ class ScoreBoard
 
     public function getScores()
     {
-        usort($this->scores, function($a, $b) {
+        uasort($this->scores, function($a, $b) {
             if ($a['score'] == $b['score']){
                 return 0;
             }
