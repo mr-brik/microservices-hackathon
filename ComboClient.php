@@ -36,7 +36,7 @@ class ComboClient
                     return false;
                 }
                 return json_decode($response->getBody(),1);
-            } catch {Exception $ex){
+            } catch (Exception $ex){
                 return false;
             }
         } else {
