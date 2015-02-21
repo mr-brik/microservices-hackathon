@@ -1,9 +1,12 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/ComboClient.php';
+require __DIR__.'/ScoreBoard.php';
 
 // set up scores data
 $scores = [];
+$score_board = new ScoreBoard;
+
 $current_time = 0;
 
 // subscribe to topics
@@ -29,25 +32,21 @@ while (true) {
         switch ($topic) {
             case 'playerJoin':
                 // give them a score of 0 and send fact
-                $scores[$response['id']] = 0;
+                $score = $score_board->add($response['id']);
+
                 $client->send('PlayerScore',
                     ['status' => 'playing', 
-                    'score' => 0, 
-                    'id' => $response['id'],
+                    'score' => $score['score'],
+                    'id' => $score['id'],
                     'time' => $current_time
                     ]
                 );
-                // send score board too
                 break;
             
             case 'ArenaClock':
                 $current_time = $response['tick'];
                 // send out leader board
-                $fact = ['scores' => [], 'time' => $current_time];
-                // get scores from ScoreBoard object
-                foreach($scores as $id => $score){
-                    $fact['scores'][] = ['id' => $id, 'score' => $score];
-                }
+                $fact = ['scores' => $score_board->getScores(), 'time' => $current_time];
                 $client->send('LeaderBoard', $fact);
                 break;
 
