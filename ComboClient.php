@@ -30,11 +30,15 @@ class ComboClient
     public function poll($topic)
     {
         if (isset($this->subscribers[$topic])){
-            $response = $this->client->get($this->subscribers[$topic]);
-            if ($response->getStatusCode() == 204) {
+            try {
+                $response = $this->client->get($this->subscribers[$topic]);
+                if ($response->getStatusCode() == 204) {
+                    return false;
+                }
+                return json_decode($response->getBody(),1);
+            } catch {Exception $ex){
                 return false;
             }
-            return json_decode($response->getBody(),1);
         } else {
             return false;
         }

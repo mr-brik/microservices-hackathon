@@ -31,7 +31,7 @@ while (true) {
 
         switch ($topic) {
             case 'playerJoin':
-                // give them a score of 0 and send fact
+                // add player to score board
                 $score = $score_board->addPlayer($response['id']);
 
                 $client->send('PlayerScore',
@@ -45,7 +45,7 @@ while (true) {
             
             case 'ArenaClock':
                 $current_time = $response['tick'];
-                // send out leader board
+                // send out leader board each tick
                 $fact = ['scores' => $score_board->getScores(), 'time' => $current_time];
                 $client->send('LeaderBoard', $fact);
                 break;
