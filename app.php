@@ -32,7 +32,7 @@ while (true) {
         switch ($topic) {
             case 'playerJoin':
                 // give them a score of 0 and send fact
-                $score = $score_board->add($response['id']);
+                $score = $score_board->addPlayer($response['id']);
 
                 $client->send('PlayerScore',
                     ['status' => 'playing', 
