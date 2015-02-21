@@ -7,8 +7,6 @@ require __DIR__.'/ScoreBoard.php';
 $scores = [];
 $score_board = new ScoreBoard;
 
-$current_time = 0;
-
 // subscribe to topics
 $topics = ['ArenaClock', 'playerJoin', 'scoreEvent'];
 
@@ -18,12 +16,11 @@ foreach ($topics as $topic) {
     $client->subscribe($topic);
 }
 
-function updateScore($client, $topic, $score, $time) {
+function updateScore($client, $topic, $score) {
     $client->send('PlayerScore',
         ['status' => 'playing', 
         'score' => $score['score'],
         'id' => $score['id'],
-        'time' => $time
         ]
     );
 }
@@ -44,14 +41,13 @@ while (true) {
             case 'playerJoin':
                 // add player to score board
                 $score = $score_board->addPlayer($response['id']);
-                updateScore($client, 'PlayerScore', $score, $current_time);
+                updateScore($client, 'PlayerScore', $score);
                 break;
             
             case 'ArenaClock':
-                $current_time = $response['tick'];
                 // send out leader board each tick
                 var_dump($score_board->getScores());
-                $fact = ['scores' => $score_board->getScores(), 'time' => $current_time];
+                $fact = ['scores' => $score_board->getScores()];
                 $client->send('LeaderBoard', $fact);
                 break;
 
@@ -60,7 +56,7 @@ while (true) {
                 if ($response['type'] == 'collision') {
                     // set score
                     $score = $score_board->updatePlayer($response['id'], -10);
-                    updateScore($client, 'PlayerScore', $score, $current_time);
+                    updateScore($client, 'PlayerScore', $score);
                 }
                 break;
             default:
