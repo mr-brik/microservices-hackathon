@@ -57,6 +57,9 @@ while (true) {
                     // set score
                     $score = $score_board->updatePlayer($response['id'], -10);
                     updateScore($client, 'PlayerScore', $score);
+                } else if ($response['type'] == 'hit') {
+                    $score = $score_board->updatePlayer($response['id'], 30);
+                    updateScore($client, 'PlayerScore', $score);
                 }
                 break;
             default:
