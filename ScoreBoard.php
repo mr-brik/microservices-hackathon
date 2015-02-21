@@ -23,6 +23,14 @@ class ScoreBoard
 
     public function getScores()
     {
+        usort($this->scores, function($a, $b) {
+            if ($a['score'] == $b['score']){
+                return 0;
+            }
+            return $a['score'] < $b['score'] ? -1 : 1;
+        });
+
+        // sort returned scores on score
         return $this->scores;
     }
 }
