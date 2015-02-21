@@ -30,7 +30,7 @@ while (true) {
             case 'playerJoin':
                 // give them a score of 0 and send fact
                 $scores[$response['id']] = 0;
-                $client->send(
+                $client->send('PlayerScore',
                     ['status' => 'playing', 
                     'score' => 0, 
                     'id' => $response['id'],
@@ -42,11 +42,19 @@ while (true) {
             
             case 'ArenaClock':
                 $current_time = $response['tick'];
+                // send out leader board
+                $fact = ['scores' => [], 'time' => $current_time];
+                // get scores from ScoreBoard object
+                foreach($scores as $id => $score){
+                    $fact['scores'][] = ['id' => $id, 'score' => $score];
+                }
+                $client->send('LeaderBoard', $fact);
                 break;
 
             case 'scoreEvent':
                 // increase player score
                 if ($response['type'] == 'collision') {
+                    // set score
                 }
                 break;
             default:

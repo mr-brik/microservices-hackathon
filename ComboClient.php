@@ -40,8 +40,8 @@ class ComboClient
         }
     }
 
-    public function send(array $fact)
+    public function send($topic, array $fact)
     {
-        $this->client->post($this->host . '/topics/' . $score_topic . ' /facts', ['json' => $fact]);
+        $this->client->post($this->host . '/topics/' . $topic . ' /facts', ['json' => $fact]);
     }
 }
